@@ -18,10 +18,15 @@ import { VscPreview, VscWand } from 'react-icons/vsc'
 import { TbHeartHandshake } from 'react-icons/tb'
 import SponsorPack from '~/components/SponsorPack'
 import { QueryGGBanner } from '~/components/QueryGGBanner'
-import { getBranch, gradientText, latestVersion, repo } from '~/routes/form'
+import {
+  getBranch,
+  gradientText,
+  latestVersion,
+  repo,
+} from '~/utils/form.server'
 import { Logo } from '~/components/Logo'
 import { getSponsorsForSponsorPack } from '~/server/sponsors'
-import type { Framework } from '~/routes/form'
+import type { Framework } from '~/utils/form.server'
 
 const menu = [
   {

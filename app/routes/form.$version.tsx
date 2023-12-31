@@ -5,10 +5,11 @@ import { DefaultErrorBoundary } from '~/components/DefaultErrorBoundary'
 import { fetchRepoFile } from '~/utils/documents.server'
 import { useLocalStorage } from '~/utils/useLocalStorage'
 import { useClientOnlyRender } from '~/utils/useClientOnlyRender'
-import { repo, getBranch, latestVersion } from '~/routes/form'
+import { repo, getBranch, latestVersion } from '~/utils/form.server'
 
 export const loader = async (context: LoaderFunctionArgs) => {
   const branch = getBranch(context.params.version)
+  console.log({repo, branch})
   const config = await fetchRepoFile(repo, branch, `docs/config.json`)
 
   if (!config) {

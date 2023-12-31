@@ -1,4 +1,4 @@
-import { DocSearch } from '@docsearch/react'
+import pkg from '@docsearch/react'
 import * as React from 'react'
 import { CgClose, CgMenuLeft } from 'react-icons/cg'
 import { FaArrowLeft, FaArrowRight, FaTimes } from 'react-icons/fa'
@@ -12,6 +12,7 @@ import { Select } from '~/components/Select'
 import { useLocalStorage } from '~/utils/useLocalStorage'
 import { DocsCalloutQueryGG } from '~/components/DocsCalloutQueryGG'
 import { DocsCalloutBytes } from '~/components/DocsCalloutBytes'
+const {DocSearch} = pkg;
 
 export type DocsConfig = {
   docSearch: {

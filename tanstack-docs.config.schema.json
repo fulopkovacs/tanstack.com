@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/TanStack/tanstack.com/blob/main/tanstack-docs.config.schema.json",
+  "title": "TanStack Docs Config",
+  "description": "Config file for the documentation of a TanStack project",
+  "type": "object",
+  "required": [
+    "docSearch",
+    "menu"
+  ],
+  "properties": {
+    "docSearch": {
+      "description": "Data for Algolia Search",
+      "type": "object",
+      "required": [
+        "appId",
+        "apiKey",
+        "indexName"
+      ],
+      "properties": {
+        "appId": {
+          "type": "string"
+        },
+        "apiKey": {
+          "type": "string"
+        },
+        "indexName": {
+          "type": "string"
+        }
+      }
+    },
+    "menu": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "label",
+          "children"
+        ],
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "label",
+                "to"
+              ],
+              "properties": {
+                "label": "string",
+                "to": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "frameworkMenus": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "framework",
+          "menuItems"
+        ],
+        "properties": {
+          "framework": {
+            "type": "string"
+          },
+          "menuItems": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "label",
+                "children"
+              ],
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "children": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "label",
+                      "to"
+                    ],
+                    "properties": {
+                      "label": "string",
+                      "to": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "users": {
+    "type": "array",
+    "items": {
+      "type": "string"
+    }
+  }
+}

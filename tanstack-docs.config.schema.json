@@ -4,19 +4,32 @@
   "title": "TanStack Docs Config",
   "description": "Config file for the documentation of a TanStack project",
   "type": "object",
-  "required": [
-    "docSearch",
-    "menu"
-  ],
+  "required": ["docSearch", "menu", "latestVersion", "availableVersions"],
   "properties": {
+    "latestVersion": {
+      "type": "string"
+    },
+    "availableVersions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["name", "branch"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "branch": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "docSearch": {
       "description": "Data for Algolia Search",
       "type": "object",
-      "required": [
-        "appId",
-        "apiKey",
-        "indexName"
-      ],
+      "required": ["appId", "apiKey", "indexName"],
       "properties": {
         "appId": {
           "type": "string"
@@ -33,10 +46,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "label",
-          "children"
-        ],
+        "required": ["label", "children"],
         "properties": {
           "label": {
             "type": "string"
@@ -45,10 +55,7 @@
             "type": "array",
             "items": {
               "type": "object",
-              "required": [
-                "label",
-                "to"
-              ],
+              "required": ["label", "to"],
               "properties": {
                 "label": "string",
                 "to": "string"
@@ -62,10 +69,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "framework",
-          "menuItems"
-        ],
+        "required": ["framework", "menuItems"],
         "properties": {
           "framework": {
             "type": "string"
@@ -74,10 +78,7 @@
             "type": "array",
             "items": {
               "type": "object",
-              "required": [
-                "label",
-                "children"
-              ],
+              "required": ["label", "children"],
               "properties": {
                 "label": {
                   "type": "string"
@@ -86,10 +87,7 @@
                   "type": "array",
                   "items": {
                     "type": "object",
-                    "required": [
-                      "label",
-                      "to"
-                    ],
+                    "required": ["label", "to"],
                     "properties": {
                       "label": "string",
                       "to": "string"

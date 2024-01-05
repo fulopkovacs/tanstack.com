@@ -18,35 +18,9 @@ import angularLogo from '~/images/angular-logo.svg'
 import { FaDiscord, FaGithub } from 'react-icons/fa'
 import type { AvailableOptions } from '~/components/Select'
 import { Scarf } from '~/components/Scarf'
-
-//
-
-export type FrameworkMenu = {
-  framework: string
-  menuItems: MenuItem[]
-}
-
-export type MenuItem = {
-  label: string | React.ReactNode
-  children: {
-    label: string | React.ReactNode
-    to: string
-  }[]
-}
-
-export type GithubDocsConfig = {
-  docSearch: {
-    appId: string
-    apiKey: string
-    indexName: string
-  }
-  menu: MenuItem[]
-  frameworkMenus: FrameworkMenu[]
-}
+import type { ConfigSchema, MenuItem } from '~/utils/config'
 
 export type Framework = 'react' | 'svelte' | 'vue' | 'solid'
-
-//
 
 export const repo = 'tanstack/form'
 
@@ -113,7 +87,7 @@ export function getBranch(argVersion?: string) {
 
 //
 
-export const useReactFormDocsConfig = () => {
+export const useReactFormDocsConfig = (config: ConfigSchema) => {
   const matches = useMatches()
   const match = matches[matches.length - 1]
   const params = useParams()
@@ -122,7 +96,7 @@ export const useReactFormDocsConfig = () => {
     params.framework || localStorage.getItem('framework') || 'react'
   const navigate = useNavigate()
 
-  const config = useMatchesData(`/form/${version}`) as GithubDocsConfig
+  // const config = useMatchesData(`/form/${version}`) as GithubDocsConfig
 
   const frameworkMenuItems =
     config.frameworkMenus.find((d) => d.framework === framework)?.menuItems ??
@@ -183,8 +157,16 @@ export const useReactFormDocsConfig = () => {
     }
   }, [version, match, navigate])
 
+  const docSearch: NonNullable<ConfigSchema['docSearch']> =
+    config.docSearch || {
+      appId: '',
+      apiKey: '',
+      indexName: '',
+    }
+
   return {
     ...config,
+    docSearch,
     menu: [
       localMenu,
       // Merge the two menus together based on their group labels

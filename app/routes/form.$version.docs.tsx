@@ -1,10 +1,57 @@
-import { Outlet, useParams } from '@remix-run/react'
+import { type LoaderFunctionArgs } from '@remix-run/node'
+import { Outlet, useLoaderData } from '@remix-run/react'
 import { Docs } from '~/components/Docs'
-import { createLogo, useReactFormDocsConfig } from '~/routes/form'
+import { createLogo, getBranch, useReactFormDocsConfig } from '~/routes/form'
+import { configSchema } from '~/utils/config'
+import { fetchRepoFile } from '~/utils/documents.server'
+
+export const loader = async (context: LoaderFunctionArgs) => {
+  const repo = 'tanstack/form'
+  const branch = getBranch(context.params.version)
+  const config = await fetchRepoFile(
+    repo,
+    branch,
+    `docs/tanstack-docs-config.json`
+  )
+  const { version } = context.params
+
+  if (!config) {
+    throw new Error('Repo docs/config.json not found!')
+  }
+
+  try {
+    const tanstackDocsConfig = JSON.parse(config)
+    const validationResult = configSchema.safeParse(tanstackDocsConfig)
+
+    if (!validationResult.success) {
+      // Log the issues that came up during validation
+      console.error(JSON.stringify(validationResult.error, null, 2))
+      throw new Error('zod validation failed')
+    }
+    return {
+      tanstackDocsConfig,
+
+      version,
+    }
+  } catch (e) {
+    // TODO: handle the error
+    // Redirect to the error page?
+    throw new Error('Invalid docs/tanstack-docs-config.json file')
+  }
+}
+
+// TODO: client loader
+
+// load the config for this repo
+// we know the repo and the version
+// why have a loader instead a function?
+// maybe for caching?
+// get the config on the server side
 
 export default function Component() {
-  const { version } = useParams()
-  let config = useReactFormDocsConfig()
+  const { tanstackDocsConfig, version } = useLoaderData<typeof loader>()
+  const config = useReactFormDocsConfig(tanstackDocsConfig)
+
   return (
     <Docs
       {...{

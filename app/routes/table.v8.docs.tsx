@@ -66,7 +66,7 @@ export default function RouteReactTable() {
       ({
         ...config,
         menu: [localMenu, ...config.menu],
-      } as DocsConfig),
+      }),
     [config]
   )
 

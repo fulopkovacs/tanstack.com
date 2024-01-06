@@ -15,7 +15,14 @@ export type MenuItem = {
 
 const menuItemSchema = z.object({
   label: z.string(),
-  children: z.array(z.object({ label: z.string(), to: z.string() })),
+  children: z.array(
+    z.object({
+      label: z.string(),
+      to: z.string(),
+
+      badge: z.string().optional(),
+    })
+  ),
 })
 
 const frameworkMenuSchema = z.object({
@@ -41,7 +48,7 @@ export const configSchema = z.object({
     })
     .optional(),
   menu: z.array(menuItemSchema),
-  frameworkMenus: z.array(frameworkMenuSchema),
+  frameworkMenus: z.array(frameworkMenuSchema).optional(),
   users: z.array(z.string()).optional(),
 })
 

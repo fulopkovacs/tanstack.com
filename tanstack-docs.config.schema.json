@@ -58,7 +58,8 @@
               "required": ["label", "to"],
               "properties": {
                 "label": "string",
-                "to": "string"
+                "to": "string",
+                "badge": "string"
               }
             }
           }
@@ -90,7 +91,8 @@
                     "required": ["label", "to"],
                     "properties": {
                       "label": "string",
-                      "to": "string"
+                      "to": "string",
+                      "badge": "string"
                     }
                   }
                 }

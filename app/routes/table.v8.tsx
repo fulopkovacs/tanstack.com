@@ -1,33 +1,63 @@
-import * as React from 'react'
-import { Link, Outlet, useLocation, useSearchParams } from '@remix-run/react'
-import { json } from '@remix-run/node'
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useRouteLoaderData,
+  useSearchParams,
+} from '@remix-run/react'
 import { DefaultErrorBoundary } from '~/components/DefaultErrorBoundary'
-import type { DocsConfig } from '~/components/Docs'
 import { fetchRepoFile } from '~/utils/documents.server'
-import { useMatchesData } from '~/utils/utils'
+import { configSchema } from '~/utils/config'
+import { version } from 'react'
 
 export const v8branch = 'main'
 
 export const loader = async () => {
+  const repo = 'tanstack/table'
   const config = await fetchRepoFile(
-    'tanstack/table',
+    repo,
     v8branch,
-    `docs/config.json`
+    `docs/tanstack-docs-config.json`
   )
 
-  const parsedConfig = JSON.parse(config ?? '')
-
-  if (!parsedConfig) {
-    throw new Error('Repo docs/config.json not found!')
+  if (!config) {
+    throw new Error('Repo docs/tanstack-docs-config.json not found!')
   }
 
-  return json(parsedConfig)
+  try {
+    const tanstackDocsConfigFromJson = JSON.parse(config)
+    const validationResult = configSchema.safeParse(tanstackDocsConfigFromJson)
+
+    if (!validationResult.success) {
+      // Log the issues that came up during validation
+      console.error(JSON.stringify(validationResult.error, null, 2))
+      throw new Error('zod validation failed')
+    }
+    return {
+      tanstackDocsConfig: validationResult.data,
+
+      version,
+    }
+  } catch (e) {
+    // TODO: handle the error
+    // Redirect to the error page?
+    throw new Error('Invalid docs/tanstack-docs-config.json file')
+  }
+}
+
+type TableConfigLoaderData = typeof loader
+
+export const useReactTableV8Config = () => {
+  const tableConfigLoaderData =
+    useRouteLoaderData<TableConfigLoaderData>('routes/table.v8')
+  if (!tableConfigLoaderData?.tanstackDocsConfig) {
+    throw new Error('Config could not be read for tanstack/table!')
+  }
+
+  return tableConfigLoaderData.tanstackDocsConfig
 }
 
 export const ErrorBoundary = DefaultErrorBoundary
-
-export const useReactTableV8Config = () =>
-  useMatchesData('/table/v8') as DocsConfig
 
 export default function RouteReactTable() {
   const [params] = useSearchParams()

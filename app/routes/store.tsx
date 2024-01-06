@@ -9,7 +9,7 @@ import {
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { seo } from '~/utils/seo'
-import { generatePath, useMatchesData } from '~/utils/utils'
+import { generatePath } from '~/utils/utils'
 import reactLogo from '~/images/react-logo.svg'
 import solidLogo from '~/images/solid-logo.svg'
 import vueLogo from '~/images/vue-logo.svg'
@@ -17,6 +17,7 @@ import svelteLogo from '~/images/svelte-logo.svg'
 import angularLogo from '~/images/angular-logo.svg'
 import { FaDiscord, FaGithub } from 'react-icons/fa'
 import type { AvailableOptions } from '~/components/Select'
+import type { ConfigSchema } from '~/utils/config'
 
 //
 
@@ -110,9 +111,7 @@ export function getBranch(argVersion?: string) {
   return ['latest', latestVersion].includes(version) ? latestBranch : version
 }
 
-//
-
-export const useReactStoreDocsConfig = () => {
+export const useReactStoreDocsConfig = (config: ConfigSchema) => {
   const matches = useMatches()
   const match = matches[matches.length - 1]
   const params = useParams()
@@ -120,8 +119,6 @@ export const useReactStoreDocsConfig = () => {
   const framework =
     params.framework || localStorage.getItem('framework') || 'react'
   const navigate = useNavigate()
-
-  const config = useMatchesData(`/store/${version}`) as GithubDocsConfig
 
   const frameworkMenuItems =
     config.frameworkMenus.find((d) => d.framework === framework)?.menuItems ??
@@ -182,8 +179,16 @@ export const useReactStoreDocsConfig = () => {
     }
   }, [version, match, navigate])
 
+  const docSearch: NonNullable<ConfigSchema['docSearch']> =
+    config.docSearch || {
+      appId: '',
+      apiKey: '',
+      indexName: '',
+    }
+
   return {
     ...config,
+    docSearch,
     menu: [
       localMenu,
       // Merge the two menus together based on their group labels

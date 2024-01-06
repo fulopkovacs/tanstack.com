@@ -85,8 +85,6 @@ export function getBranch(argVersion?: string) {
   return ['latest', latestVersion].includes(version) ? latestBranch : version
 }
 
-//
-
 export const useReactFormDocsConfig = (config: ConfigSchema) => {
   const matches = useMatches()
   const match = matches[matches.length - 1]
@@ -95,8 +93,6 @@ export const useReactFormDocsConfig = (config: ConfigSchema) => {
   const framework =
     params.framework || localStorage.getItem('framework') || 'react'
   const navigate = useNavigate()
-
-  // const config = useMatchesData(`/form/${version}`) as GithubDocsConfig
 
   const frameworkMenuItems =
     config.frameworkMenus.find((d) => d.framework === framework)?.menuItems ??

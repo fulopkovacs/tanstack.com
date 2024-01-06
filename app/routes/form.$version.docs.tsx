@@ -20,7 +20,7 @@ export const loader = async (context: LoaderFunctionArgs) => {
   const { version } = context.params
 
   if (!config) {
-    throw new Error('Repo docs/config.json not found!')
+    throw new Error('Repo docs/tanstack-docs-config.json not found!')
   }
 
   try {

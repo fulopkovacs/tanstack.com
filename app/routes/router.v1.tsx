@@ -49,13 +49,13 @@ type RouterConfigLoaderData = typeof loader
 export const ErrorBoundary = DefaultErrorBoundary
 
 export const useRouterV1Config = () => {
-  const tableConfigLoaderData =
+  const routerConfigLoaderData =
     useRouteLoaderData<RouterConfigLoaderData>('routes/router.v1')
-  if (!tableConfigLoaderData?.tanstackDocsConfig) {
-    throw new Error('Config could not be read for tanstack/table!')
+  if (!routerConfigLoaderData?.tanstackDocsConfig) {
+    throw new Error('Config could not be read for tanstack/router!')
   }
 
-  return tableConfigLoaderData.tanstackDocsConfig
+  return routerConfigLoaderData.tanstackDocsConfig
 }
 
 export default function RouteReactRouter() {

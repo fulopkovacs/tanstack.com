@@ -1,32 +1,61 @@
-import { Link, Outlet, useLocation, useSearchParams } from '@remix-run/react'
-import { json } from '@remix-run/node'
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useRouteLoaderData,
+  useSearchParams,
+} from '@remix-run/react'
 import { DefaultErrorBoundary } from '~/components/DefaultErrorBoundary'
-import type { DocsConfig } from '~/components/Docs'
 import { fetchRepoFile } from '~/utils/documents.server'
-import { useMatchesData } from '~/utils/utils'
+import { configSchema } from '~/utils/config'
 
 export const v3branch = 'main'
 
 export const loader = async () => {
+  const repo = 'tanstack/virtual'
+
   const config = await fetchRepoFile(
-    'tanstack/virtual',
+    repo,
     v3branch,
-    `docs/config.json`
+    `docs/tanstack-docs-config.json`
   )
 
-  const parsedConfig = JSON.parse(config ?? '')
-
-  if (!parsedConfig) {
-    throw new Error('Repo docs/config.json not found!')
+  if (!config) {
+    throw new Error('Repo docs/tanstack-docs-config.json not found!')
   }
 
-  return json(parsedConfig)
+  try {
+    const tanstackDocsConfigFromJson = JSON.parse(config)
+    const validationResult = configSchema.safeParse(tanstackDocsConfigFromJson)
+
+    if (!validationResult.success) {
+      // Log the issues that came up during validation
+      console.error(JSON.stringify(validationResult.error, null, 2))
+      throw new Error('zod validation failed')
+    }
+    return {
+      tanstackDocsConfig: validationResult.data,
+    }
+  } catch (e) {
+    // TODO: handle the error
+    // Redirect to the error page?
+    throw new Error('Invalid docs/tanstack-docs-config.json file')
+  }
 }
+
+type VirtualConfigLoaderData = typeof loader
 
 export const ErrorBoundary = DefaultErrorBoundary
 
-export const useVirtualV3Config = () =>
-  useMatchesData('/virtual/v3') as DocsConfig
+export const useVirtualV3Config = () => {
+  const virtualConfigData =
+    useRouteLoaderData<VirtualConfigLoaderData>('routes/virtual.v3')
+  if (!virtualConfigData?.tanstackDocsConfig) {
+    throw new Error('Config could not be read for tanstack/virtual!')
+  }
+
+  return virtualConfigData.tanstackDocsConfig
+}
 
 export default function RouteReactVirtual() {
   const [params] = useSearchParams()

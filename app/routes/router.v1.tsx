@@ -1,33 +1,62 @@
-import { Link, Outlet, useLocation, useSearchParams } from '@remix-run/react'
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useRouteLoaderData,
+  useSearchParams,
+} from '@remix-run/react'
 import type { LoaderFunction } from '@remix-run/node'
-import { json } from '@remix-run/node'
 import { DefaultErrorBoundary } from '~/components/DefaultErrorBoundary'
-import type { DocsConfig } from '~/components/Docs'
 import { fetchRepoFile } from '~/utils/documents.server'
-import { useMatchesData } from '~/utils/utils'
+import { configSchema } from '~/utils/config'
 
 export const v1branch = 'main'
 
 export const loader: LoaderFunction = async () => {
+  const repo = 'tanstack/router'
+
   const config = await fetchRepoFile(
-    'tanstack/router',
+    repo,
     v1branch,
-    `docs/config.json`
+    `docs/tanstack-docs-config.json`
   )
 
-  const parsedConfig = JSON.parse(config ?? '')
-
-  if (!parsedConfig) {
-    throw new Error('Repo docs/config.json not found!')
+  if (!config) {
+    throw new Error('Repo docs/tanstack-docs-config.json not found!')
   }
 
-  return json(parsedConfig)
+  try {
+    const tanstackDocsConfigFromJson = JSON.parse(config)
+    const validationResult = configSchema.safeParse(tanstackDocsConfigFromJson)
+
+    if (!validationResult.success) {
+      // Log the issues that came up during validation
+      console.error(JSON.stringify(validationResult.error, null, 2))
+      throw new Error('zod validation failed')
+    }
+    return {
+      tanstackDocsConfig: validationResult.data,
+    }
+  } catch (e) {
+    // TODO: handle the error
+    // Redirect to the error page?
+    throw new Error('Invalid docs/tanstack-docs-config.json file')
+  }
 }
+
+type RouterConfigLoaderData = typeof loader
 
 export const ErrorBoundary = DefaultErrorBoundary
 
-export const useRouterV1Config = () =>
-  useMatchesData('/router/v1') as DocsConfig
+export const useRouterV1Config = () => {
+  const tableConfigLoaderData =
+    useRouteLoaderData<RouterConfigLoaderData>('routes/router.v1')
+  if (!tableConfigLoaderData?.tanstackDocsConfig) {
+    throw new Error('Config could not be read for tanstack/table!')
+  }
+
+  return tableConfigLoaderData.tanstackDocsConfig
+}
 
 export default function RouteReactRouter() {
   const [params] = useSearchParams()

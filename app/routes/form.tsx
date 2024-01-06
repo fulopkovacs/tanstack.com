@@ -9,7 +9,7 @@ import {
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { seo } from '~/utils/seo'
-import { generatePath, useMatchesData } from '~/utils/utils'
+import { generatePath } from '~/utils/utils'
 import reactLogo from '~/images/react-logo.svg'
 import solidLogo from '~/images/solid-logo.svg'
 import vueLogo from '~/images/vue-logo.svg'

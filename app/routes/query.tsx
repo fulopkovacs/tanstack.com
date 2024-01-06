@@ -36,32 +36,6 @@ export function getBranch(argVersion?: string) {
   )
 }
 
-export type Menu = {
-  framework: string
-  menuItems: MenuItem[]
-}
-
-export type MenuItem = {
-  label: string | React.ReactNode
-  children: {
-    label: string | React.ReactNode
-    to: string
-  }[]
-}
-
-export type GithubDocsConfig = {
-  docSearch: {
-    appId: string
-    apiKey: string
-    indexName: string
-  }
-  menu: Menu[]
-  users: string[]
-}
-
-export const useReactQueryDocsConfig = (version?: string) =>
-  useMatchesData(`/query/${version}`) as GithubDocsConfig
-
 export const meta: MetaFunction = () => {
   return seo({
     title: 'TanStack Query | React Query, Solid Query, Svelte Query, Vue Query',

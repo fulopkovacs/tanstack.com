@@ -20,8 +20,8 @@ export const loader = async (context: LoaderFunctionArgs) => {
   }
 
   try {
-    const tanstackDocsConfig = JSON.parse(config)
-    const validationResult = configSchema.safeParse(tanstackDocsConfig)
+    const tanstackDocsConfigFromJson = JSON.parse(config)
+    const validationResult = configSchema.safeParse(tanstackDocsConfigFromJson)
 
     if (!validationResult.success) {
       // Log the issues that came up during validation
@@ -29,7 +29,7 @@ export const loader = async (context: LoaderFunctionArgs) => {
       throw new Error('zod validation failed')
     }
     return {
-      tanstackDocsConfig,
+      tanstackDocsConfig: validationResult.data,
 
       version,
     }

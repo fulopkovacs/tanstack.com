@@ -1,9 +1,9 @@
-import { Outlet } from '@remix-run/react'
+import { Outlet, useRouteLoaderData } from '@remix-run/react'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { seo } from '~/utils/seo'
-import { useMatchesData } from '~/utils/utils'
 import { Scarf } from '~/components/Scarf'
+import type { QueryConfigLoader } from './query.$version'
 
 export const repo = 'tanstack/query'
 
@@ -34,6 +34,18 @@ export function getBranch(argVersion?: string) {
   return (
     availableVersions.find((v) => v.name === version)?.branch ?? latestBranch
   )
+}
+
+export const useQueryDocsConfig = () => {
+  const queryConfigLoaderData = useRouteLoaderData<QueryConfigLoader>(
+    'routes/query.$version'
+  )
+
+  if (!queryConfigLoaderData?.tanstackDocsConfig) {
+    throw new Error('Config could not be read for tanstack/query!')
+  }
+
+  return queryConfigLoaderData
 }
 
 export const meta: MetaFunction = () => {

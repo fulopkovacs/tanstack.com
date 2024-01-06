@@ -1,21 +1,47 @@
 import { Link, Outlet, useLocation, useSearchParams } from '@remix-run/react'
-import { json } from '@remix-run/node'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { DefaultErrorBoundary } from '~/components/DefaultErrorBoundary'
 import { fetchRepoFile } from '~/utils/documents.server'
-import { repo, getBranch, latestVersion } from '~/routes/query'
+import { getBranch, latestVersion, repo } from '~/routes/query'
 import { RedirectVersionBanner } from '~/components/RedirectVersionBanner'
+import { configSchema } from '~/utils/config'
 
 export const loader = async (context: LoaderFunctionArgs) => {
   const branch = getBranch(context.params.version)
-  const config = await fetchRepoFile(repo, branch, `docs/config.json`)
+  const config = await fetchRepoFile(
+    repo,
+    branch,
+    `docs/tanstack-docs-config.json`
+  )
+  const { version, framework } = context.params
 
   if (!config) {
     throw new Error('Repo docs/config.json not found!')
   }
 
-  return json(JSON.parse(config))
+  try {
+    const tanstackDocsConfigFromJson = JSON.parse(config)
+    const validationResult = configSchema.safeParse(tanstackDocsConfigFromJson)
+
+    if (!validationResult.success) {
+      // Log the issues that came up during validation
+      console.error(JSON.stringify(validationResult.error, null, 2))
+      throw new Error('zod validation failed')
+    }
+    return {
+      tanstackDocsConfig: validationResult.data,
+
+      framework,
+      version,
+    }
+  } catch (e) {
+    // TODO: handle the error
+    // Redirect to the error page?
+    throw new Error('Invalid docs/tanstack-docs-config.json file')
+  }
 }
+
+export type QueryConfigLoader = typeof loader
 
 export const ErrorBoundary = DefaultErrorBoundary
 

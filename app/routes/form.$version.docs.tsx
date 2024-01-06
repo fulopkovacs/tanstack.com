@@ -1,12 +1,16 @@
 import { type LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
 import { Docs } from '~/components/Docs'
-import { createLogo, getBranch, useReactFormDocsConfig } from '~/routes/form'
+import {
+  createLogo,
+  getBranch,
+  repo,
+  useReactFormDocsConfig,
+} from '~/routes/form'
 import { configSchema } from '~/utils/config'
 import { fetchRepoFile } from '~/utils/documents.server'
 
 export const loader = async (context: LoaderFunctionArgs) => {
-  const repo = 'tanstack/form'
   const branch = getBranch(context.params.version)
   const config = await fetchRepoFile(
     repo,

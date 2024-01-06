@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { FaDiscord, FaGithub } from 'react-icons/fa'
-import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import { Link, useLoaderData, useMatches, useNavigate } from '@remix-run/react'
+import type { MetaFunction } from '@remix-run/node'
+import { Link, useMatches, useNavigate, useParams } from '@remix-run/react'
 import { gradientText } from '~/routes/query.$version._index'
 import { seo } from '~/utils/seo'
 import type { DocsConfig } from '~/components/Docs'
@@ -9,9 +9,9 @@ import { Docs } from '~/components/Docs'
 import { QueryGGBanner } from '~/components/QueryGGBanner'
 import {
   availableVersions,
-  getBranch,
   latestVersion,
   repo,
+  useQueryDocsConfig,
 } from '~/routes/query'
 import reactLogo from '~/images/react-logo.svg'
 import solidLogo from '~/images/solid-logo.svg'
@@ -20,8 +20,7 @@ import svelteLogo from '~/images/svelte-logo.svg'
 import angularLogo from '~/images/angular-logo.svg'
 import type { AvailableOptions } from '~/components/Select'
 import { generatePath } from '~/utils/utils'
-import { fetchRepoFile } from '~/utils/documents.server'
-import { type MenuItem, configSchema } from '~/utils/config'
+import { type MenuItem } from '~/utils/config'
 
 const frameworks = {
   react: { label: 'React', logo: reactLogo, value: 'react' },
@@ -78,48 +77,12 @@ export const meta: MetaFunction = () => {
   })
 }
 
-export const loader = async (context: LoaderFunctionArgs) => {
-  const repo = 'tanstack/query'
-  const branch = getBranch(context.params.version)
-  const config = await fetchRepoFile(
-    repo,
-    branch,
-    `docs/tanstack-docs-config.json`
-  )
-  const { version, framework } = context.params
-
-  if (!config) {
-    throw new Error('Repo docs/config.json not found!')
-  }
-
-  try {
-    const tanstackDocsConfigFromJson = JSON.parse(config)
-    const validationResult = configSchema.safeParse(tanstackDocsConfigFromJson)
-
-    if (!validationResult.success) {
-      // Log the issues that came up during validation
-      console.error(JSON.stringify(validationResult.error, null, 2))
-      throw new Error('zod validation failed')
-    }
-    return {
-      tanstackDocsConfig: validationResult.data,
-
-      framework,
-      version,
-    }
-  } catch (e) {
-    // TODO: handle the error
-    // Redirect to the error page?
-    throw new Error('Invalid docs/tanstack-docs-config.json file')
-  }
-}
-
 export default function RouteFrameworkParam() {
   const matches = useMatches()
   const match = matches[matches.length - 1]
   const navigate = useNavigate()
-  const { tanstackDocsConfig, version, framework } =
-    useLoaderData<typeof loader>()
+  const { version, framework } = useParams()
+  const { tanstackDocsConfig } = useQueryDocsConfig()
 
   let config = tanstackDocsConfig
 

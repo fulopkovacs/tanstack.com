@@ -30,13 +30,10 @@ export const loader = async (context: LoaderFunctionArgs) => {
     }
     return {
       tanstackDocsConfig: validationResult.data,
-
       framework,
       version,
     }
   } catch (e) {
-    // TODO: handle the error
-    // Redirect to the error page?
     throw new Error('Invalid docs/tanstack-docs-config.json file')
   }
 }

@@ -32,9 +32,9 @@ export const loader = async (context: LoaderFunctionArgs) => {
       console.error(JSON.stringify(validationResult.error, null, 2))
       throw new Error('Zod validation failed')
     }
+
     return {
       tanstackDocsConfig: validationResult.data,
-
       version,
     }
   } catch (e) {

@@ -8,6 +8,7 @@ import {
 import { DefaultErrorBoundary } from '~/components/DefaultErrorBoundary'
 import { fetchRepoFile } from '~/utils/documents.server'
 import { configSchema } from '~/utils/config'
+import { json } from '@remix-run/node'
 
 export const v3branch = 'main'
 
@@ -34,9 +35,9 @@ export const loader = async () => {
       throw new Error('Zod validation failed')
     }
 
-    return {
+    return json({
       tanstackDocsConfig: validationResult.data,
-    }
+    })
   } catch (e) {
     throw new Error('Invalid docs/tanstack-docs-config.json file')
   }

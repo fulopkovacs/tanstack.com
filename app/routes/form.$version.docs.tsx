@@ -1,4 +1,4 @@
-import { type LoaderFunctionArgs } from '@remix-run/node'
+import { json, type LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
 import { Docs } from '~/components/Docs'
 import {
@@ -33,10 +33,10 @@ export const loader = async (context: LoaderFunctionArgs) => {
       throw new Error('Zod validation failed')
     }
 
-    return {
+    return json({
       tanstackDocsConfig: validationResult.data,
       version,
-    }
+    })
   } catch (e) {
     throw new Error('Invalid docs/tanstack-docs-config.json file')
   }

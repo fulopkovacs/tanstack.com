@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation, useSearchParams } from '@remix-run/react'
-import type { LoaderFunctionArgs } from '@remix-run/node'
+import { json, type LoaderFunctionArgs } from '@remix-run/node'
 import { DefaultErrorBoundary } from '~/components/DefaultErrorBoundary'
 import { fetchRepoFile } from '~/utils/documents.server'
 import { getBranch, latestVersion, repo } from '~/routes/query'
@@ -28,11 +28,11 @@ export const loader = async (context: LoaderFunctionArgs) => {
       console.error(JSON.stringify(validationResult.error, null, 2))
       throw new Error('Zod validation failed')
     }
-    return {
+    return json({
       tanstackDocsConfig: validationResult.data,
       framework,
       version,
-    }
+    })
   } catch (e) {
     throw new Error('Invalid docs/tanstack-docs-config.json file')
   }

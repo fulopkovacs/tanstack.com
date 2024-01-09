@@ -95,14 +95,16 @@ export const useReactFormDocsConfig = (config: ConfigSchema) => {
   const navigate = useNavigate()
 
   const frameworkMenuItems =
-    config.frameworkMenus.find((d) => d.framework === framework)?.menuItems ??
+    config.frameworkMenus?.find((d) => d.framework === framework)?.menuItems ??
     []
 
   const frameworkConfig = React.useMemo(() => {
-    const availableFrameworks = config.frameworkMenus.reduce(
+    const availableFrameworks = config.frameworkMenus?.reduce(
       (acc: AvailableOptions, menuEntry) => {
-        acc[menuEntry.framework as string] =
-          frameworks[menuEntry.framework as keyof typeof frameworks]
+        if (menuEntry.framework in frameworks) {
+          acc[menuEntry.framework] =
+            frameworks[menuEntry.framework as keyof typeof frameworks]
+        }
         return acc
       },
       { react: frameworks['react'] }

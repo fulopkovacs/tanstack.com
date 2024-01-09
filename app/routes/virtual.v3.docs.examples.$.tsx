@@ -14,7 +14,7 @@ export const loader = async (context: LoaderFunctionArgs) => {
   return json({ kind, name })
 }
 
-export const meta: MetaFunction = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return seo({
     title: `${capitalize(data.kind)} Virtual ${slugToTitle(
       data.name

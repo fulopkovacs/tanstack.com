@@ -49,7 +49,7 @@ export const loader: LoaderFunction = async (context) => {
   )
 }
 
-export const meta: MetaFunction = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return seo({
     title: `${data?.title ?? 'Docs'} | TanStack Router Docs`,
     description: data?.description,
@@ -59,7 +59,7 @@ export const meta: MetaFunction = ({ data }) => {
 export const ErrorBoundary = DefaultErrorBoundary
 
 export default function RouteReactTableDocs() {
-  const { title, code, filePath } = useLoaderData()
+const { title, code, filePath } = useLoaderData<typeof loader>()
 
   return (
     <Doc

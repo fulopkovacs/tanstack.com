@@ -30,9 +30,9 @@ export const loader: LoaderFunction = async () => {
     const validationResult = configSchema.safeParse(tanstackDocsConfigFromJson)
 
     if (!validationResult.success) {
-      // Log the issues that came up during validation
+      // Log the issues that come up during validation
       console.error(JSON.stringify(validationResult.error, null, 2))
-      throw new Error('zod validation failed')
+      throw new Error('Zod validation failed')
     }
 
     return {

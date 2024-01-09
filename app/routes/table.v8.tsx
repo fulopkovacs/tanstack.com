@@ -33,14 +33,12 @@ export const loader = async () => {
       console.error(JSON.stringify(validationResult.error, null, 2))
       throw new Error('zod validation failed')
     }
+
     return {
       tanstackDocsConfig: validationResult.data,
-
       version,
     }
   } catch (e) {
-    // TODO: handle the error
-    // Redirect to the error page?
     throw new Error('Invalid docs/tanstack-docs-config.json file')
   }
 }

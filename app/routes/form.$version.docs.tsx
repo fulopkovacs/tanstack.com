@@ -38,19 +38,9 @@ export const loader = async (context: LoaderFunctionArgs) => {
       version,
     }
   } catch (e) {
-    // TODO: handle the error
-    // Redirect to the error page?
     throw new Error('Invalid docs/tanstack-docs-config.json file')
   }
 }
-
-// TODO: client loader
-
-// load the config for this repo
-// we know the repo and the version
-// why have a loader instead a function?
-// maybe for caching?
-// get the config on the server side
 
 export default function Component() {
   const { tanstackDocsConfig, version } = useLoaderData<typeof loader>()

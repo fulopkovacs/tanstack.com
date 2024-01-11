@@ -99,6 +99,10 @@ export const useReactFormDocsConfig = (config: ConfigSchema) => {
     []
 
   const frameworkConfig = React.useMemo(() => {
+    if (!config.frameworkMenus) {
+      return undefined
+    }
+
     const availableFrameworks = config.frameworkMenus?.reduce(
       (acc: AvailableOptions, menuEntry) => {
         if (menuEntry.framework in frameworks) {
@@ -112,7 +116,7 @@ export const useReactFormDocsConfig = (config: ConfigSchema) => {
 
     return {
       label: 'Framework',
-      selected: framework!,
+      selected: framework,
       available: availableFrameworks,
       onSelect: (option: { label: string; value: string }) => {
         const url = generatePath(match.id, {

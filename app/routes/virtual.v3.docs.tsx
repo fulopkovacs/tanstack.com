@@ -56,15 +56,14 @@ export const meta: MetaFunction = () => {
 }
 
 export default function RouteReactTable() {
-  let config = useVirtualV3Config()
+  const tanstackConfig = useVirtualV3Config()
 
-  config = React.useMemo(
-    () =>
-      ({
-        ...config,
-        menu: [localMenu, ...config.menu],
-      } as DocsConfig),
-    [config]
+  const config: DocsConfig = React.useMemo(
+    () => ({
+      ...tanstackConfig,
+      menu: [localMenu, ...config.menu],
+    }),
+    [tanstackConfig]
   )
 
   return (

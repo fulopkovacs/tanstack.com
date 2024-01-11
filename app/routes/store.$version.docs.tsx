@@ -44,7 +44,9 @@ export const loader = async (context: LoaderFunctionArgs) => {
 
 export default function Component() {
   const { tanstackDocsConfig, version } = useLoaderData<typeof loader>()
+
   let config = useReactStoreDocsConfig(tanstackDocsConfig)
+
   return (
     <Docs
       {...{

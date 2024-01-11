@@ -45,8 +45,7 @@ export const configSchema = z.object({
       appId: z.string(),
       apiKey: z.string(),
       indexName: z.string(),
-    })
-    .optional(),
+    }),
   menu: z.array(menuItemSchema),
   frameworkMenus: z.array(frameworkMenuSchema).optional(),
   users: z.array(z.string()).optional(),

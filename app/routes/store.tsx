@@ -121,11 +121,15 @@ export const useReactStoreDocsConfig = (config: ConfigSchema) => {
   const navigate = useNavigate()
 
   const frameworkMenuItems =
-    config.frameworkMenus.find((d) => d.framework === framework)?.menuItems ??
+    config.frameworkMenus?.find((d) => d.framework === framework)?.menuItems ??
     []
 
   const frameworkConfig = React.useMemo(() => {
-    const availableFrameworks = config.frameworkMenus.reduce(
+    if (!config.frameworkMenus) {
+      return undefined
+    }
+
+    const availableFrameworks = config.frameworkMenus?.reduce(
       (acc: AvailableOptions, menuEntry) => {
         acc[menuEntry.framework as string] =
           frameworks[menuEntry.framework as keyof typeof frameworks]

@@ -59,7 +59,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export const ErrorBoundary = DefaultErrorBoundary
 
 export default function RouteReactTableDocs() {
-const { title, code, filePath } = useLoaderData<typeof loader>()
+  const { title, code, filePath } = useLoaderData<typeof loader>()
 
   return (
     <Doc

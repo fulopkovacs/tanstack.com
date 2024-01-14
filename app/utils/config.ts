@@ -31,15 +31,6 @@ const frameworkMenuSchema = z.object({
 })
 
 export const configSchema = z.object({
-  latestVersion: z.string(),
-  availableVersions: z
-    .array(
-      z.object({
-        name: z.string(),
-        branch: z.string(),
-      })
-    )
-    .min(1),
   docSearch: z.object({
     appId: z.string(),
     apiKey: z.string(),

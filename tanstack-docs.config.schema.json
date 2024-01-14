@@ -2,32 +2,12 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/TanStack/tanstack.com/blob/main/tanstack-docs.config.schema.json",
   "title": "TanStack Docs Config",
-  "description": "Config file for the documentation of a TanStack project",
+  "description": "Config file for the documentation of a TanStack project.",
   "type": "object",
-  "required": ["docSearch", "menu", "latestVersion", "availableVersions"],
+  "required": ["docSearch", "menu"],
   "properties": {
-    "latestVersion": {
-      "type": "string"
-    },
-    "availableVersions": {
-      "type": "array",
-      "minItems": 1,
-      "uniqueItems": true,
-      "items": {
-        "type": "object",
-        "required": ["name", "branch"],
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "branch": {
-            "type": "string"
-          }
-        }
-      }
-    },
     "docSearch": {
-      "description": "Data for Algolia Search",
+      "description": "Data for Algolia Search.",
       "type": "object",
       "required": ["appId", "apiKey", "indexName"],
       "properties": {
@@ -43,6 +23,7 @@
       }
     },
     "menu": {
+      "description": "Doc pages that are NOT framework-specific.",
       "type": "array",
       "items": {
         "type": "object",
@@ -67,6 +48,7 @@
       }
     },
     "frameworkMenus": {
+      "description": "Doc pages that are framework-specific.",
       "type": "array",
       "items": {
         "type": "object",

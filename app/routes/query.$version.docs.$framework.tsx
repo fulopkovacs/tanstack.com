@@ -87,7 +87,7 @@ export default function RouteFrameworkParam() {
   let config = tanstackDocsConfig
 
   const docsConfig = React.useMemo(() => {
-    const frameworkMenu = config.frameworkMenus.find(
+    const frameworkMenu = config.frameworkMenus?.find(
       (d) => d.framework === framework
     )
     if (!frameworkMenu) return null
@@ -98,6 +98,10 @@ export default function RouteFrameworkParam() {
   }, [framework, config])
 
   const frameworkConfig = React.useMemo(() => {
+    if (!config.frameworkMenus) {
+      return undefined
+    }
+
     const availableFrameworks = config.frameworkMenus.reduce(
       (acc: AvailableOptions, menuEntry) => {
         acc[menuEntry.framework as string] =

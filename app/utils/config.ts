@@ -40,12 +40,11 @@ export const configSchema = z.object({
       })
     )
     .min(1),
-  docSearch: z
-    .object({
-      appId: z.string(),
-      apiKey: z.string(),
-      indexName: z.string(),
-    }),
+  docSearch: z.object({
+    appId: z.string(),
+    apiKey: z.string(),
+    indexName: z.string(),
+  }),
   menu: z.array(menuItemSchema),
   frameworkMenus: z.array(frameworkMenuSchema).optional(),
   users: z.array(z.string()).optional(),

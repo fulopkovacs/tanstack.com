@@ -7,40 +7,18 @@ import {
 } from '@remix-run/react'
 import { json, type LoaderFunction } from '@remix-run/node'
 import { DefaultErrorBoundary } from '~/components/DefaultErrorBoundary'
-import { fetchRepoFile } from '~/utils/documents.server'
-import { configSchema } from '~/utils/config'
+import { getTanstackDocsConfig } from '~/utils/config'
 
 export const v1branch = 'main'
 
 export const loader: LoaderFunction = async () => {
   const repo = 'tanstack/router'
 
-  const config = await fetchRepoFile(
-    repo,
-    v1branch,
-    `docs/tanstack-docs-config.json`
-  )
+  const tanstackDocsConfig = await getTanstackDocsConfig(repo, v1branch)
 
-  if (!config) {
-    throw new Error('Repo docs/tanstack-docs-config.json not found!')
-  }
-
-  try {
-    const tanstackDocsConfigFromJson = JSON.parse(config)
-    const validationResult = configSchema.safeParse(tanstackDocsConfigFromJson)
-
-    if (!validationResult.success) {
-      // Log the issues that come up during validation
-      console.error(JSON.stringify(validationResult.error, null, 2))
-      throw new Error('Zod validation failed')
-    }
-
-    return json({
-      tanstackDocsConfig: validationResult.data,
-    })
-  } catch (e) {
-    throw new Error('Invalid docs/tanstack-docs-config.json file')
-  }
+  return json({
+    tanstackDocsConfig,
+  })
 }
 
 type RouterConfigLoaderData = typeof loader

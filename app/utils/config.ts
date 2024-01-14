@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { fetchRepoFile } from './documents.server'
 
 export type FrameworkMenu = {
   framework: string
@@ -30,7 +31,7 @@ const frameworkMenuSchema = z.object({
   menuItems: z.array(menuItemSchema),
 })
 
-export const configSchema = z.object({
+const configSchema = z.object({
   docSearch: z.object({
     appId: z.string(),
     apiKey: z.string(),
@@ -50,4 +51,34 @@ export function getCurrentlySelectedFrameworkFromLocalStorage(
     selectedFramework || localStorage.getItem('framework') || 'react'
 
   return framework
+}
+
+/**
+  Fetch the config file for the project and validate it.
+  */
+export async function getTanstackDocsConfig(repo: string, branch: string) {
+  const config = await fetchRepoFile(
+    repo,
+    branch,
+    `docs/tanstack-docs-config.json`
+  )
+
+  if (!config) {
+    throw new Error('Repo docs/tanstack-docs-config.json not found!')
+  }
+
+  try {
+    const tanstackDocsConfigFromJson = JSON.parse(config)
+    const validationResult = configSchema.safeParse(tanstackDocsConfigFromJson)
+
+    if (!validationResult.success) {
+      // Log the issues that come up during validation
+      console.error(JSON.stringify(validationResult.error, null, 2))
+      throw new Error('Zod validation failed')
+    }
+
+    return validationResult.data
+  } catch (e) {
+    throw new Error('Invalid docs/tanstack-docs-config.json file')
+  }
 }

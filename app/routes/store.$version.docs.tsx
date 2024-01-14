@@ -7,39 +7,17 @@ import {
   repo,
   useReactStoreDocsConfig,
 } from '~/routes/store'
-import { configSchema } from '~/utils/config'
-import { fetchRepoFile } from '~/utils/documents.server'
+import { getTanstackDocsConfig } from '~/utils/config'
 
 export const loader = async (context: LoaderFunctionArgs) => {
   const branch = getBranch(context.params.version)
-  const config = await fetchRepoFile(
-    repo,
-    branch,
-    `docs/tanstack-docs-config.json`
-  )
+  const tanstackDocsConfig = await getTanstackDocsConfig(repo, branch)
   const { version } = context.params
 
-  if (!config) {
-    throw new Error('Repo docs/tanstack-docs-config.json not found!')
-  }
-
-  try {
-    const tanstackDocsConfigFromJson = JSON.parse(config)
-    const validationResult = configSchema.safeParse(tanstackDocsConfigFromJson)
-
-    if (!validationResult.success) {
-      // Log the issues that come up during validation
-      console.error(JSON.stringify(validationResult.error, null, 2))
-      throw new Error('Zod validation failed')
-    }
-
-    return json({
-      tanstackDocsConfig: validationResult.data,
-      version,
-    })
-  } catch (e) {
-    throw new Error('Invalid docs/tanstack-docs-config.json file')
-  }
+  return json({
+    tanstackDocsConfig,
+    version,
+  })
 }
 
 export default function Component() {

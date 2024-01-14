@@ -1,9 +1,13 @@
-import { Link, Outlet, useLocation, useSearchParams } from '@remix-run/react'
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useRouteLoaderData,
+  useSearchParams,
+} from '@remix-run/react'
 import { json, type LoaderFunction } from '@remix-run/node'
 import { DefaultErrorBoundary } from '~/components/DefaultErrorBoundary'
-import type { DocsConfig } from '~/components/Docs'
 import { fetchRepoFile } from '~/utils/documents.server'
-import { useMatchesData } from '~/utils/utils'
 import { configSchema } from '~/utils/config'
 
 export const v1branch = 'main'
@@ -37,8 +41,17 @@ export const loader: LoaderFunction = async () => {
 
 export const ErrorBoundary = DefaultErrorBoundary
 
-export const useRangerV1Config = () =>
-  useMatchesData('/ranger/v1') as DocsConfig
+type RangerConfigV1Loader = typeof loader
+
+export const useRangerV1Config = () => {
+  const tableConfigLoaderData =
+    useRouteLoaderData<RangerConfigV1Loader>('routes/ranger.v1')
+  if (!tableConfigLoaderData?.tanstackDocsConfig) {
+    throw new Error('Config could not be read for tanstack/table!')
+  }
+
+  return tableConfigLoaderData.tanstackDocsConfig
+}
 
 export default function RouteReactRanger() {
   const [params] = useSearchParams()

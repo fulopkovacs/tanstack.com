@@ -5,6 +5,7 @@
   "description": "Config file for the documentation of a TanStack project.",
   "type": "object",
   "required": ["docSearch", "menu"],
+  "additionalProperties": false,
   "properties": {
     "docSearch": {
       "description": "Data for Algolia Search.",
@@ -28,6 +29,7 @@
       "items": {
         "type": "object",
         "required": ["label", "children"],
+        "additionalProperties": false,
         "properties": {
           "label": {
             "type": "string"
@@ -37,6 +39,7 @@
             "items": {
               "type": "object",
               "required": ["label", "to"],
+              "additionalProperties": false,
               "properties": {
                 "label": "string",
                 "to": "string",
@@ -53,6 +56,7 @@
       "items": {
         "type": "object",
         "required": ["framework", "menuItems"],
+        "additionalProperties": false,
         "properties": {
           "framework": {
             "type": "string"
@@ -62,6 +66,7 @@
             "items": {
               "type": "object",
               "required": ["label", "children"],
+              "additionalProperties": false,
               "properties": {
                 "label": {
                   "type": "string"
@@ -71,6 +76,7 @@
                   "items": {
                     "type": "object",
                     "required": ["label", "to"],
+                    "additionalProperties": false,
                     "properties": {
                       "label": "string",
                       "to": "string",

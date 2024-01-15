@@ -55,13 +55,13 @@ export const meta: MetaFunction = () => {
   })
 }
 
-export default function RouteReactTable() {
+export default function RouteVirtual() {
   const tanstackConfig = useVirtualV3Config()
 
   const config: DocsConfig = React.useMemo(
     () => ({
       ...tanstackConfig,
-      menu: [localMenu, ...config.menu],
+      menu: [localMenu, ...tanstackConfig.menu],
     }),
     [tanstackConfig]
   )

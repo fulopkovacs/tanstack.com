@@ -89,12 +89,12 @@
           }
         }
       }
-    }
-  },
-  "users": {
-    "type": "array",
-    "items": {
-      "type": "string"
+    },
+    "users": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   }
 }

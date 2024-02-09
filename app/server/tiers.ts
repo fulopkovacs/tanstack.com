@@ -24,11 +24,11 @@ async function getTiersMeta() {
   //
   //   return tiers
   // } catch (err: any) {
-    // if (err.message === 'An API key is required to connect to Airtable') {
-      console.error('Missing airtable credentials, returning mock data.')
-      return []
-    // }
-    // throw err
+  // if (err.message === 'An API key is required to connect to Airtable') {
+  console.error('Missing airtable credentials, returning mock data.')
+  return []
+  // }
+  // throw err
   // }
 }
 

@@ -236,12 +236,12 @@ async function getSponsorsMeta() {
   //     )
   //   })
   // } catch (err: any) {
-    // if (err.message === 'An API key is required to connect to Airtable') {
-      console.error('Missing airtable credentials, returning mock data.')
+  // if (err.message === 'An API key is required to connect to Airtable') {
+  console.error('Missing airtable credentials, returning mock data.')
 
-      return []
-    // }
-    // throw err
+  return []
+  // }
+  // throw err
   // }
 }
 
